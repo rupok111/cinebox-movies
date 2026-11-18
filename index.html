@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="-uItiR2KvhZsGxFZjjY2Kg0EVWulXRoZSU_sH0vh7KA" />
+  <meta name="description" content="Movexa - Stream Latest Movies & TV Series in Full HD with multi-language subtitles." />
+  <title>Movexa - Stream Latest Movies & TV Series HD</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0b0d12;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding-bottom: 72px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .mb-green { background-color: #00dc5a; color: #05070a; }
+    .mb-green-text { color: #00dc5a; }
+    .card-hover:active { transform: scale(0.97); }
+  </style>
+</head>
+<body class="min-h-screen select-none">
+
+  <!-- Top App Header -->
+  <header class="sticky top-0 z-40 bg-[#0b0d12]/95 backdrop-blur-md border-b border-white/5 px-4 pt-3 pb-2.5">
+    <div class="max-w-5xl mx-auto space-y-2.5">
+      <div class="flex items-center justify-between gap-3">
+        <!-- Brand Logo -->
+        <div onclick="resetHome()" class="flex items-center gap-2 cursor-pointer shrink-0">
+          <div class="w-8 h-8 rounded-lg mb-green flex items-center justify-center font-black text-lg shadow-lg shadow-[#00dc5a]/20">
+            <i class="fa-solid fa-play text-xs ml-0.5"></i>
+          </div>
+          <span class="font-extrabold text-xl tracking-tight text-white">Mov<span class="mb-green-text">exa</span></span>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="flex-1 max-w-md relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" onkeyup="handleSearch(event)" placeholder="Search movies, TV shows..." 
+            class="w-full bg-[#161a23] border border-white/10 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#00dc5a]">
+        </div>
+
+        <!-- VIP / HD Badge -->
+        <button onclick="openSmartLink()" class="shrink-0 bg-[#161a23] border border-[#00dc5a]/40 text-[#00dc5a] px-2.5 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1">
+          <i class="fa-solid fa-crown text-[10px]"></i> VIP
+        </button>
+      </div>
+
+      <!-- Horizontal Category Tabs -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-0.5 text-xs font-semibold">
+        <button onclick="setCategory('trending', this)" class="cat-btn px-3.5 py-1.5 rounded-full mb-green shrink-0 transition">Featured</button>
+        <button onclick="setCategory('movie', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-[#161a23] text-slate-300 shrink-0 transition">Movies</button>
+        <button onclick="setCategory('tv', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-[#161a23] text-slate-300 shrink-0 transition">TV Series</button>
+        <button onclick="setCategory('28', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-[#161a23] text-slate-300 shrink-0 transition">Action</button>
+        <button onclick="setCategory('27', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-[#161a23] text-slate-300 shrink-0 transition">Horror</button>
+        <button onclick="setCategory('10749', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-[#161a23] text-slate-300 shrink-0 transition">Romance</button>
+        <button onclick="setCategory('16', this)" class="cat-btn px-3.5 py-1.5 rounded-full bg-[#161a23] text-slate-300 shrink-0 transition">Anime</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto px-4 pt-3 space-y-6">
+
+    <!-- Hero Featured Banner (MovieBox Style) -->
+    <div id="heroBanner" onclick="triggerHeroAction()" class="relative rounded-2xl overflow-hidden bg-[#161a23] h-56 sm:h-72 cursor-pointer group border border-white/10 shadow-2xl">
+      <img id="heroImg" src="" alt="Featured" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-500 opacity-85">
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0b0d12] via-[#0b0d12]/40 to-transparent"></div>
+      
+      <div class="absolute top-3 left-3 flex items-center gap-1.5">
+        <span class="mb-green text-[10px] font-black uppercase px-2 py-0.5 rounded">TOP #1 TRENDING</span>
+        <span class="bg-black/70 backdrop-blur text-white text-[10px] font-bold px-2 py-0.5 rounded border border-white/10">1080P HD</span>
+      </div>
+
+      <div class="absolute bottom-3.5 left-4 right-4 flex items-end justify-between gap-3">
+        <div class="space-y-1 max-w-[70%]">
+          <h1 id="heroTitle" class="text-lg sm:text-2xl font-extrabold text-white line-clamp-1">Loading Featured...</h1>
+          <p id="heroMeta" class="text-[11px] text-slate-300 font-medium">IMDb 8.5 • Action • Drama</p>
+        </div>
+        <button class="mb-green px-4 py-2 rounded-full font-extrabold text-xs flex items-center gap-1.5 shadow-lg shrink-0">
+          <i class="fa-solid fa-play"></i> Play Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Trending Horizontal Slider -->
+    <section id="trendingSection" class="space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-extrabold tracking-wide text-white flex items-center gap-1.5">
+          <span class="w-1 h-4 mb-green rounded-full"></span> Hot & Trending
+        </h2>
+        <span onclick="openSmartLink()" class="text-[11px] mb-green-text font-semibold cursor-pointer">See All <i class="fa-solid fa-chevron-right text-[9px]"></i></span>
+      </div>
+      <div id="trendingRow" class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Main Movie Grid -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 id="gridHeading" class="text-sm font-extrabold tracking-wide text-white flex items-center gap-1.5">
+          <span class="w-1 h-4 mb-green rounded-full"></span> Popular Releases
+        </h2>
+        <span class="text-[11px] text-slate-400">Free HD Stream</span>
+      </div>
+
+      <div id="moviesGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-4">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="pt-3 text-center">
+        <button onclick="loadMore()" id="loadMoreBtn" class="bg-[#161a23] hover:bg-[#1f2533] border border-white/10 text-white text-xs font-bold px-6 py-2.5 rounded-full transition">
+          Load More Movies
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MovieBox Style Player & Details Modal -->
+  <div id="playerModal" class="fixed inset-0 z-50 bg-[#0b0d12] hidden overflow-y-auto">
+    <div class="max-w-3xl mx-auto min-h-screen flex flex-col">
+      
+      <!-- Modal Top Bar -->
+      <div class="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#0b0d12]/95 sticky top-0 z-10">
+        <button onclick="closePlayer()" class="w-8 h-8 rounded-full bg-[#161a23] flex items-center justify-center text-white">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <span class="text-xs font-bold text-slate-300 truncate max-w-[200px]" id="modalHeaderTitle">Movie Details</span>
+        <button onclick="openSmartLink()" class="text-xs mb-green-text font-bold">
+          <i class="fa-solid fa-share-nodes"></i> Share
+        </button>
+      </div>
+
+      <!-- Video Player Area -->
+      <div class="relative w-full aspect-video bg-black flex items-center justify-center overflow-hidden">
+        <iframe id="trailerFrame" class="w-full h-full hidden" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        
+        <!-- Poster Fallback with Play Trigger -->
+        <div id="playerFallback" onclick="openSmartLink()" class="relative w-full h-full cursor-pointer flex items-center justify-center">
+          <img id="modalBackdrop" src="" class="w-full h-full object-cover opacity-50">
+          <div class="absolute flex flex-col items-center gap-2">
+            <div class="w-14 h-14 rounded-full mb-green flex items-center justify-center text-xl shadow-2xl animate-pulse">
+              <i class="fa-solid fa-play ml-1"></i>
+            </div>
+            <span class="bg-black/80 text-white text-[11px] font-bold px-3 py-1 rounded-full border border-white/15">Tap to Stream HD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Server & Action Buttons -->
+      <div class="p-4 space-y-4">
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="openSmartLink()" class="mb-green py-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-[#00dc5a]/20">
+            <i class="fa-solid fa-bolt"></i> Watch Full HD
+          </button>
+          <button onclick="openSmartLink()" class="bg-[#161a23] border border-white/10 hover:bg-[#1f2533] text-white py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-server mb-green-text"></i> VIP Server 2
+          </button>
+        </div>
+
+        <!-- Server Pills -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar text-[11px]">
+          <span class="text-slate-400 font-semibold shrink-0">Servers:</span>
+          <button onclick="openSmartLink()" class="px-3 py-1 rounded-lg bg-[#00dc5a]/20 border border-[#00dc5a] text-[#00dc5a] font-bold shrink-0">Server 1 (Auto)</button>
+          <button onclick="openSmartLink()" class="px-3 py-1 rounded-lg bg-[#161a23] text-slate-300 shrink-0">Server 2 (Fast)</button>
+          <button onclick="openSmartLink()" class="px-3 py-1 rounded-lg bg-[#161a23] text-slate-300 shrink-0">Server 3 (1080p)</button>
+        </div>
+
+        <!-- Title & Metadata -->
+        <div class="space-y-2 pt-1">
+          <h1 id="modalTitle" class="text-xl font-extrabold text-white">Movie Title</h1>
+          <div class="flex flex-wrap items-center gap-2 text-[11px] font-semibold">
+            <span class="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded"><i class="fa-solid fa-star mr-1"></i><span id="modalRating">8.4</span></span>
+            <span class="bg-[#161a23] text-slate-300 px-2 py-0.5 rounded" id="modalYear">2026</span>
+            <span class="bg-[#161a23] text-[#00dc5a] px-2 py-0.5 rounded">Full HD • Subtitles</span>
+          </div>
+          <p id="modalOverview" class="text-xs text-slate-400 leading-relaxed pt-1">Description...</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Mobile App Navigation Bar -->
+  <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#0e1117]/95 backdrop-blur-md border-t border-white/10 px-6 py-2">
+    <div class="max-w-md mx-auto flex justify-between items-center text-[10px] font-semibold">
+      <button onclick="resetHome()" class="flex flex-col items-center gap-1 mb-green-text">
+        <i class="fa-solid fa-house text-base"></i>
+        <span>Home</span>
+      </button>
+      <button onclick="setCategory('movie', null); openSmartLink();" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white">
+        <i class="fa-solid fa-film text-base"></i>
+        <span>Movies</span>
+      </button>
+      <button onclick="setCategory('tv', null); openSmartLink();" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white">
+        <i class="fa-solid fa-tv text-base"></i>
+        <span>Series</span>
+      </button>
+      <button onclick="openSmartLink()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white">
+        <i class="fa-solid fa-fire text-base text-amber-400"></i>
+        <span>Hot VIP</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    const API_KEY = '18cab31feb85b59153f3ff320ee76b3b';
+    const SMART_LINK = 'https://asiafilm.org/4/4c570441f558b567cda80e7c461a41ad';
+    const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+    const BACKDROP_BASE = 'https://image.tmdb.org/t/p/w1280';
+
+    let currentPage = 1;
+    let currentEndpoint = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`;
+    let featuredItem = null;
+    let searchTimeout = null;
+
+    // Trigger Marketing Link in New Tab
+    function openSmartLink() {
+      window.open(SMART_LINK, '_blank', 'noopener,noreferrer');
+    }
+
+    // Load Initial Content
+    async function initApp() {
+      try {
+        const res = await fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`);
+        const data = await res.json();
+        const items = data.results || [];
+
+        if (items.length > 0) {
+          featuredItem = items[0];
+          document.getElementById('heroImg').src = BACKDROP_BASE + (featuredItem.backdrop_path || featuredItem.poster_path);
+          document.getElementById('heroTitle').innerText = featuredItem.title || featuredItem.name;
+          const year = (featuredItem.release_date || featuredItem.first_air_date || '2026').slice(0, 4);
+          const rate = (featuredItem.vote_average || 8.2).toFixed(1);
+          document.getElementById('heroMeta').innerText = `IMDb ${rate} • ${year} • HD Stream`;
+
+          renderTrending(items.slice(1, 12));
+          renderGrid(items, false);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderTrending(items) {
+      const row = document.getElementById('trendingRow');
+      row.innerHTML = items.map(item => {
+        if (!item.poster_path) return '';
+        const title = (item.title || item.name || '').replace(/'/g, "\'");
+        const rate = (item.vote_average || 7.8).toFixed(1);
+        const type = item.media_type || 'movie';
+        return `
+          <div onclick="handleItemClick(${item.id}, '${type}')" class="w-28 sm:w-32 shrink-0 cursor-pointer card-hover transition">
+            <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#161a23] border border-white/10">
+              <img src="${IMG_BASE + item.poster_path}" loading="lazy" class="w-full h-full object-cover">
+              <span class="absolute top-1.5 left-1.5 bg-black/75 text-[#00dc5a] text-[9px] font-black px-1.5 py-0.5 rounded">HD</span>
+              <span class="absolute bottom-1.5 right-1.5 bg-black/75 text-amber-400 text-[9px] font-bold px-1.5 py-0.5 rounded"><i class="fa-solid fa-star text-[8px]"></i> ${rate}</span>
+            </div>
+            <p class="text-[11px] font-semibold text-slate-200 truncate mt-1.5">${title}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderGrid(items, append = false) {
+      const grid = document.getElementById('moviesGrid');
+      const html = items.map(item => {
+        if (!item.poster_path) return '';
+        const title = (item.title || item.name || '').replace(/'/g, "\'");
+        const year = (item.release_date || item.first_air_date || '2026').slice(0, 4);
+        const rate = (item.vote_average || 8.0).toFixed(1);
+        const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+        return `
+          <div onclick="handleItemClick(${item.id}, '${type}')" class="cursor-pointer card-hover transition group">
+            <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-[#161a23] border border-white/10">
+              <img src="${IMG_BASE + item.poster_path}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+              <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                <div class="w-10 h-10 rounded-full mb-green flex items-center justify-center shadow-lg">
+                  <i class="fa-solid fa-play text-xs ml-0.5"></i>
+                </div>
+              </div>
+              <span class="absolute top-1.5 left-1.5 mb-green text-[9px] font-black px-1.5 py-0.5 rounded">HD</span>
+              <span class="absolute bottom-1.5 right-1.5 bg-black/80 text-amber-400 text-[9px] font-bold px-1.5 py-0.5 rounded"><i class="fa-solid fa-star text-[8px]"></i> ${rate}</span>
+            </div>
+            <p class="text-xs font-semibold text-white truncate mt-1.5">${title}</p>
+            <p class="text-[10px] text-slate-400">${year} • ${type === 'tv' ? 'Series' : 'Movie'}</p>
+          </div>
+        `;
+      }).join('');
+
+      if (append) {
+        grid.innerHTML += html;
+      } else {
+        grid.innerHTML = html;
+      }
+    }
+
+    // Hero Banner Click -> Open Smart Link First + Open Player
+    function triggerHeroAction() {
+      openSmartLink();
+      if (featuredItem) {
+        const type = featuredItem.media_type || 'movie';
+        openDetails(featuredItem.id, type);
+      }
+    }
+
+    // Thumbnail Click -> Open Smart Link First + Open Trailer Player
+    function handleItemClick(id, type) {
+      openSmartLink();
+      openDetails(id, type);
+    }
+
+    async function openDetails(id, type) {
+      const modal = document.getElementById('playerModal');
+      const frame = document.getElementById('trailerFrame');
+      const fallback = document.getElementById('playerFallback');
+      
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      frame.classList.add('hidden');
+      frame.src = '';
+      fallback.classList.remove('hidden');
+
+      try {
+        const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}&append_to_response=videos`);
+        const item = await res.json();
+
+        const title = item.title || item.name;
+        document.getElementById('modalHeaderTitle').innerText = title;
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalRating').innerText = (item.vote_average || 8.1).toFixed(1);
+        document.getElementById('modalYear').innerText = (item.release_date || item.first_air_date || '2026').slice(0, 4);
+        document.getElementById('modalOverview').innerText = item.overview || 'Stream this title in full HD quality with multi-language subtitles.';
+        document.getElementById('modalBackdrop').src = BACKDROP_BASE + (item.backdrop_path || item.poster_path);
+
+        const videos = (item.videos && item.videos.results) || [];
+        const trailer = videos.find(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser')) || videos.find(v => v.site === 'YouTube');
+
+        if (trailer) {
+          frame.src = `https://www.youtube.com/embed/${trailer.key}?autoplay=1&rel=0`;
+          frame.classList.remove('hidden');
+          fallback.classList.add('hidden');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function closePlayer() {
+      const modal = document.getElementById('playerModal');
+      const frame = document.getElementById('trailerFrame');
+      frame.src = '';
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    async function setCategory(cat, btnEl) {
+      if (btnEl) {
+        document.querySelectorAll('.cat-btn').forEach(b => {
+          b.className = 'cat-btn px-3.5 py-1.5 rounded-full bg-[#161a23] text-slate-300 shrink-0 transition';
+        });
+        btnEl.className = 'cat-btn px-3.5 py-1.5 rounded-full mb-green shrink-0 transition';
+      }
+
+      currentPage = 1;
+      document.getElementById('trendingSection').classList.toggle('hidden', cat !== 'trending');
+
+      if (cat === 'trending') {
+        document.getElementById('gridHeading').innerHTML = '<span class="w-1 h-4 mb-green rounded-full"></span> Popular Releases';
+        currentEndpoint = `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`;
+      } else if (cat === 'movie') {
+        document.getElementById('gridHeading').innerHTML = '<span class="w-1 h-4 mb-green rounded-full"></span> Latest Movies';
+        currentEndpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`;
+      } else if (cat === 'tv') {
+        document.getElementById('gridHeading').innerHTML = '<span class="w-1 h-4 mb-green rounded-full"></span> Popular TV Series';
+        currentEndpoint = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}`;
+      } else {
+        document.getElementById('gridHeading').innerHTML = '<span class="w-1 h-4 mb-green rounded-full"></span> Genre Selection';
+        currentEndpoint = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${cat}`;
+      }
+
+      const res = await fetch(`${currentEndpoint}&page=1`);
+      const data = await res.json();
+      renderGrid(data.results || [], false);
+    }
+
+    function handleSearch(e) {
+      clearTimeout(searchTimeout);
+      const q = e.target.value.trim();
+      searchTimeout = setTimeout(async () => {
+        if (!q) {
+          resetHome();
+          return;
+        }
+        document.getElementById('trendingSection').classList.add('hidden');
+        document.getElementById('gridHeading').innerHTML = `<span class="w-1 h-4 mb-green rounded-full"></span> Results for "${q}"`;
+        currentPage = 1;
+        currentEndpoint = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(q)}`;
+        const res = await fetch(`${currentEndpoint}&page=1`);
+        const data = await res.json();
+        renderGrid(data.results || [], false);
+      }, 450);
+    }
+
+    async function loadMore() {
+      currentPage++;
+      const btn = document.getElementById('loadMoreBtn');
+      btn.innerText = 'Loading...';
+      const res = await fetch(`${currentEndpoint}&page=${currentPage}`);
+      const data = await res.json();
+      renderGrid(data.results || [], true);
+      btn.innerText = 'Load More Movies';
+    }
+
+    function resetHome() {
+      document.getElementById('searchInput').value = '';
+      const firstBtn = document.querySelector('.cat-btn');
+      setCategory('trending', firstBtn);
+    }
+
+    initApp();
+  </script>
+</body>
+                                                                 </html>
