@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cinebox-movies-cgrk.vercel.app/sitemap.xml
